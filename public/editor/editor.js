@@ -6,7 +6,10 @@ const preview = document.getElementById('preview')
 const previewEndcap = document.getElementById('preview-endcap')
 const previewDivider = document.getElementById('preview-divider')
 const status = document.getElementById('status')
-const snippet = document.getElementById('snippet')
+const snippetBanner = document.getElementById('snippet-banner')
+const snippetNav = document.getElementById('snippet-nav')
+const snippetDivider = document.getElementById('snippet-divider')
+const snippetEndcap = document.getElementById('snippet-endcap')
 
 const NUMBER_FIELDS = [
   'width',
@@ -43,17 +46,24 @@ function setStatus(msg) {
   status.textContent = msg
 }
 
-function pictureSnippet(origin) {
+function profileCallback() {
   const profileEl = form.elements.namedItem('profileUrl')
   const profile =
     (profileEl && 'value' in profileEl && String(profileEl.value).trim()) || 'https://github.com/you'
-  const cb = encodeURIComponent(profile)
+  return encodeURIComponent(profile)
+}
+
+function bannerSnippet(origin) {
   return `<picture>
   <source media="(prefers-color-scheme: dark)" srcset="${origin}/banner-dark.png" />
   <source media="(prefers-color-scheme: light)" srcset="${origin}/banner-light.png" />
   <img src="${origin}/banner-light.png" alt="banner" />
-</picture>
-<p>
+</picture>`
+}
+
+function navButtonsSnippet(origin) {
+  const cb = profileCallback()
+  return `<div style="text-align: right">
   <a href="${origin}/prev-banner?callback=${cb}">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="${origin}/nav-back-dark.png" />
@@ -66,17 +76,31 @@ function pictureSnippet(origin) {
       <img src="${origin}/nav-forward-light.png" alt="Next banner" width="36" height="36" />
     </picture>
   </a>
-</p>
-<picture>
+</div>`
+}
+
+function dividerSnippet(origin) {
+  return `<picture>
   <source media="(prefers-color-scheme: dark)" srcset="${origin}/divider-dark.png" />
   <source media="(prefers-color-scheme: light)" srcset="${origin}/divider-light.png" />
   <img src="${origin}/divider-light.png" alt="" />
-</picture>
-<picture>
+</picture>`
+}
+
+function endcapSnippet(origin) {
+  return `<picture>
   <source media="(prefers-color-scheme: dark)" srcset="${origin}/endcap-dark.png" />
   <source media="(prefers-color-scheme: light)" srcset="${origin}/endcap-light.png" />
   <img src="${origin}/endcap-light.png" alt="" />
 </picture>`
+}
+
+function updateSnippets() {
+  const origin = window.location.origin
+  if (snippetBanner) snippetBanner.textContent = bannerSnippet(origin)
+  if (snippetNav) snippetNav.textContent = navButtonsSnippet(origin)
+  if (snippetDivider) snippetDivider.textContent = dividerSnippet(origin)
+  if (snippetEndcap) snippetEndcap.textContent = endcapSnippet(origin)
 }
 
 function setPreviewTheme(theme) {
@@ -101,7 +125,7 @@ function refreshPreview() {
   const fwd = document.getElementById('nav-forward-preview')
   if (back) back.src = `/nav-back.png?theme=${previewTheme}&t=${bust}`
   if (fwd) fwd.src = `/nav-forward.png?theme=${previewTheme}&t=${bust}`
-  snippet.textContent = pictureSnippet(window.location.origin)
+  updateSnippets()
 }
 
 function textRowTemplate(item = {}, { open = true } = {}) {
@@ -830,9 +854,7 @@ if (bannerUrlInput) {
 
 const profileUrlInput = form.elements.namedItem('profileUrl')
 if (profileUrlInput) {
-  profileUrlInput.addEventListener('input', () => {
-    snippet.textContent = pictureSnippet(window.location.origin)
-  })
+  profileUrlInput.addEventListener('input', updateSnippets)
   profileUrlInput.addEventListener('change', () => scheduleSave({ refill: false }))
 }
 

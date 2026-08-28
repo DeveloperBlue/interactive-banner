@@ -219,10 +219,13 @@ h2 {
   font-size: 0.8rem;
 }
 
-.snippet {
+.snippet-block {
   margin: 0.75rem 0 0;
   font-size: 0.85rem;
-  word-break: break-all;
+}
+
+.snippet-label {
+  margin: 0;
 }
 
 .profile-cb {
@@ -239,8 +242,13 @@ h2 {
   min-width: 0;
 }
 
+.nav-snippet-block {
+  margin-top: 0.5rem;
+}
+
 .nav-btn-preview {
-  display: inline-flex;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: 0.35rem;
   margin: 0.45rem 0 0;
@@ -252,15 +260,20 @@ h2 {
   height: 36px;
 }
 
-.snippet code {
+.embed-snippet {
   display: block;
   white-space: pre-wrap;
+  word-break: break-all;
   margin-top: 0.35rem;
   padding: 0.5rem;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--input-bg);
   font-size: 0.75rem;
+}
+
+.endcap-block .embed-snippet {
+  margin-top: 0.5rem;
 }
 
 label {

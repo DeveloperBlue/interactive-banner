@@ -23,32 +23,34 @@
           <div class="preview-frame">
             <img id="preview" alt="Banner preview" />
           </div>
-          <p class="muted shortcut-hint">↑↓ pan main · Alt+↑↓ end cap · Ctrl+↑↓ divider (Shift = 10%). ←→ cycle starred.</p>
-          <p class="snippet">
-            README:
+          <div class="current-banner">
+            <div class="picker-head">
+              <h3>Current banner URL</h3>
+              <div class="current-banner-actions">
+                <button type="button" id="star-current" title="Star / cache this URL">☆ Star</button>
+                <button type="button" id="copy-banner-url" title="Copy URL">Copy</button>
+              </div>
+            </div>
+            <code id="current-banner-url" class="current-banner-url"></code>
+          </div>
+          <div class="snippet-block">
+            <p class="snippet-label muted">README:</p>
             <label class="profile-cb">
               Profile URL
               <input form="form" name="profileUrl" type="url" placeholder="https://github.com/you" />
             </label>
-            <span class="nav-btn-preview" aria-hidden="true">
+            <code id="snippet-banner" class="embed-snippet"></code>
+          </div>
+          <div class="snippet-block nav-snippet-block">
+            <div class="nav-btn-preview" aria-hidden="true">
               <img id="nav-back-preview" width="36" height="36" alt="" />
               <img id="nav-forward-preview" width="36" height="36" alt="" />
-            </span>
-            <code id="snippet"></code>
-          </p>
+            </div>
+            <code id="snippet-nav" class="embed-snippet"></code>
+          </div>
+          <p class="muted shortcut-hint">↑↓ pan main · Alt+↑↓ end cap · Ctrl+↑↓ divider (Shift = 10%). ←→ cycle starred.</p>
 
           <div class="picker">
-            <div class="current-banner">
-              <div class="picker-head">
-                <h3>Current banner URL</h3>
-                <div class="current-banner-actions">
-                  <button type="button" id="star-current" title="Star / cache this URL">☆ Star</button>
-                  <button type="button" id="copy-banner-url" title="Copy URL">Copy</button>
-                </div>
-              </div>
-              <code id="current-banner-url" class="current-banner-url"></code>
-            </div>
-
             <div class="endcap-block">
               <div class="picker-head">
                 <h3>Middle divider</h3>
@@ -66,6 +68,7 @@
               <div class="preview-frame endcap-frame">
                 <img id="preview-divider" alt="Middle divider preview" />
               </div>
+              <code id="snippet-divider" class="embed-snippet"></code>
             </div>
 
             <div class="endcap-block">
@@ -89,6 +92,7 @@
               <div class="preview-frame endcap-frame">
                 <img id="preview-endcap" alt="End-cap preview" />
               </div>
+              <code id="snippet-endcap" class="embed-snippet"></code>
             </div>
 
             <div class="picker-head">
