@@ -47,10 +47,20 @@ function setStatus(msg) {
 }
 
 function profileCallback() {
+  const profile = getProfileUrl()
+  return encodeURIComponent(profile || 'https://github.com/you')
+}
+
+function getProfileUrl() {
   const profileEl = form.elements.namedItem('profileUrl')
-  const profile =
-    (profileEl && 'value' in profileEl && String(profileEl.value).trim()) || 'https://github.com/you'
-  return encodeURIComponent(profile)
+  return profileEl && 'value' in profileEl ? String(profileEl.value).trim() : ''
+}
+
+function warnProfileUrlMissing() {
+  if (getProfileUrl()) return
+  alert(
+    'Profile URL is not set. Set it above the README snippet so nav buttons redirect to your GitHub profile.',
+  )
 }
 
 function bannerSnippet(origin) {
@@ -880,6 +890,27 @@ document.getElementById('copy-banner-url').addEventListener('click', async () =>
     setStatus('Banner URL copied')
   } catch {
     setStatus('Could not copy URL')
+  }
+})
+
+document.querySelector('.preview-panel')?.addEventListener('click', async (e) => {
+  const btn = e.target instanceof Element ? e.target.closest('.code-copy') : null
+  if (!btn) return
+  const block = btn.closest('.code-block')
+  const code = block?.querySelector('code')
+  const text = code?.textContent?.trim() || ''
+  if (!text) return
+  if (block?.closest('.snippets')) warnProfileUrlMissing()
+  try {
+    await navigator.clipboard.writeText(text)
+    const prev = btn.textContent
+    btn.textContent = 'Copied'
+    setStatus('Copied')
+    setTimeout(() => {
+      if (btn.textContent === 'Copied') btn.textContent = prev
+    }, 1200)
+  } catch {
+    setStatus('Could not copy')
   }
 })
 
