@@ -1,33 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
-const PUBLIC_EXACT = new Set([
-  '/health',
-  '/banner.png',
-  '/banner',
-  '/banner-light.png',
-  '/banner-dark.png',
-  '/endcap.png',
-  '/endcap',
-  '/endcap-light.png',
-  '/endcap-dark.png',
-  '/divider.png',
-  '/divider',
-  '/divider-light.png',
-  '/divider-dark.png',
-  '/set-banner',
-  '/prev-banner',
-  '/next-banner',
-  '/nav-back.png',
-  '/nav-forward.png',
-  '/nav-back-light.png',
-  '/nav-back-dark.png',
-  '/nav-forward-light.png',
-  '/nav-forward-dark.png',
-])
-
-const PUBLIC_PREFIXES = ['/banners/']
-
 export function dashboardCredentials(): { user: string; password: string } | null {
   const password = process.env.DASHBOARD_PASSWORD
   if (!password) return null
@@ -43,10 +16,9 @@ export function assertDashboardAuthConfigured(): void {
   }
 }
 
-export function isPublicPath(url: string): boolean {
+export function isEditorPath(url: string): boolean {
   const pathOnly = (url.split('?')[0] ?? url) || '/'
-  if (PUBLIC_EXACT.has(pathOnly)) return true
-  return PUBLIC_PREFIXES.some((prefix) => pathOnly.startsWith(prefix))
+  return pathOnly === '/editor' || pathOnly.startsWith('/editor/')
 }
 
 function secretEqual(a: string, b: string): boolean {
@@ -75,7 +47,7 @@ export function checkBasicAuth(
 export async function dashboardAuthHook(req: FastifyRequest, reply: FastifyReply): Promise<void> {
   const creds = dashboardCredentials()
   if (!creds) return
-  if (isPublicPath(req.url)) return
+  if (!isEditorPath(req.url)) return
   if (checkBasicAuth(req.headers.authorization, creds.user, creds.password)) return
   reply.header('WWW-Authenticate', 'Basic realm="Banner dashboard", charset="UTF-8"')
   return reply.code(401).send({ error: 'Unauthorized' })

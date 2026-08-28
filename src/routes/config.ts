@@ -3,9 +3,9 @@ import { ZodError } from 'zod'
 import { loadConfig, saveConfig } from '../state/config-store.js'
 
 export async function configRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/config', async () => loadConfig())
+  app.get('/api/config', async () => loadConfig())
 
-  app.put('/config', async (req, reply) => {
+  app.put('/api/config', async (req, reply) => {
     try {
       const saved = await saveConfig(req.body)
       return saved

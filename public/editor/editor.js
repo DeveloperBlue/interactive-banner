@@ -1,3 +1,5 @@
+const API = '/editor/api'
+
 const form = document.getElementById('form')
 const textsEl = document.getElementById('texts')
 const preview = document.getElementById('preview')
@@ -226,7 +228,7 @@ function readForm() {
 
 async function load() {
   setStatus('Loading…')
-  const res = await fetch('/config', { credentials: 'include' })
+  const res = await fetch(`${API}/config`, { credentials: 'include' })
   if (!res.ok) throw new Error('Failed to load config')
   const config = await res.json()
   fillForm(config)
@@ -235,7 +237,7 @@ async function load() {
 }
 
 async function saveForm({ refill = true } = {}) {
-  const res = await fetch('/config', {
+  const res = await fetch(`${API}/config`, {
     method: 'PUT',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
@@ -347,14 +349,14 @@ function loadStarred() {
 }
 
 async function fetchStarred() {
-  const res = await fetch('/api/starred', { credentials: 'include' })
+  const res = await fetch(`${API}/starred`, { credentials: 'include' })
   if (!res.ok) throw new Error('Failed to load starred')
   const data = await res.json()
   starredList = Array.isArray(data.entries) ? data.entries : []
 }
 
 async function persistStarred(list) {
-  const res = await fetch('/api/starred', {
+  const res = await fetch(`${API}/starred`, {
     method: 'PUT',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
@@ -624,7 +626,7 @@ function renderStarred() {
 async function loadLocalBanners() {
   localGrid.textContent = 'Loading…'
   try {
-    const res = await fetch('/api/local-banners', { credentials: 'include' })
+    const res = await fetch(`${API}/local-banners`, { credentials: 'include' })
     if (!res.ok) throw new Error(`Local banners ${res.status}`)
     const data = await res.json()
     const files = data.files ?? []
@@ -660,7 +662,7 @@ function isPngOrJpegFile(file) {
 async function uploadLocalBanner(file) {
   const body = new FormData()
   body.append('file', file, file.name)
-  const res = await fetch('/api/local-banners', {
+  const res = await fetch(`${API}/local-banners`, {
     method: 'POST',
     credentials: 'include',
     body,
@@ -678,7 +680,7 @@ async function deleteLocalBanner(entry) {
   if (!confirm(`Delete ${name} from banners/?`)) return
   setStatus(`Deleting ${name}…`)
   try {
-    const res = await fetch(`/api/local-banners/${encodeURIComponent(name)}`, {
+    const res = await fetch(`${API}/local-banners/${encodeURIComponent(name)}`, {
       method: 'DELETE',
       credentials: 'include',
     })
