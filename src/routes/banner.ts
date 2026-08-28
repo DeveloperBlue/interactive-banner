@@ -5,7 +5,7 @@ import { renderBannerPng, renderDividerPng, renderEndCapPng } from '../compose/r
 async function sendPng(png: Buffer, reply: FastifyReply) {
   return reply
     .header('Content-Type', 'image/png')
-    .header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    .header('Cache-Control', 'private, max-age=0, no-cache')
     .header('Pragma', 'no-cache')
     .send(png)
 }
