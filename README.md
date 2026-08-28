@@ -48,3 +48,4 @@ To verify, request a generated URL directly and check response headers: `cf-cach
 - [] Accept image masks
 - [] Make preview column wider to better show github profile's size, maybe resizable column with matching min and max
 - [] Better control surfaces overall
+- [] Missing controls for padding for avatar and blur circle
