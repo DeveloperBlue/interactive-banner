@@ -73,7 +73,7 @@ function bannerSnippet(origin) {
 
 function navButtonsSnippet(origin) {
   const cb = profileCallback()
-  return `<div style="text-align: right">
+  return `<div align="right">
   <a href="${origin}/prev-banner?callback=${cb}">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="${origin}/nav-back-dark.png" />
