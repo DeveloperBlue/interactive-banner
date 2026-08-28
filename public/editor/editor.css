@@ -219,13 +219,25 @@ h2 {
   font-size: 0.8rem;
 }
 
+.snippets {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
 .snippet-block {
   margin: 0.75rem 0 0;
   font-size: 0.85rem;
 }
 
+.snippets .snippet-block:first-child {
+  margin-top: 0;
+}
+
 .snippet-label {
   margin: 0;
+  font-size: 0.85rem;
+  font-weight: 650;
 }
 
 .profile-cb {
@@ -240,10 +252,6 @@ h2 {
 .profile-cb input {
   flex: 1 1 12rem;
   min-width: 0;
-}
-
-.nav-snippet-block {
-  margin-top: 0.5rem;
 }
 
 .nav-btn-preview {
@@ -270,10 +278,6 @@ h2 {
   border-radius: 4px;
   background: var(--input-bg);
   font-size: 0.75rem;
-}
-
-.endcap-block .embed-snippet {
-  margin-top: 0.5rem;
 }
 
 label {

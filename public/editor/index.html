@@ -33,21 +33,6 @@
             </div>
             <code id="current-banner-url" class="current-banner-url"></code>
           </div>
-          <div class="snippet-block">
-            <p class="snippet-label muted">README:</p>
-            <label class="profile-cb">
-              Profile URL
-              <input form="form" name="profileUrl" type="url" placeholder="https://github.com/you" />
-            </label>
-            <code id="snippet-banner" class="embed-snippet"></code>
-          </div>
-          <div class="snippet-block nav-snippet-block">
-            <div class="nav-btn-preview" aria-hidden="true">
-              <img id="nav-back-preview" width="36" height="36" alt="" />
-              <img id="nav-forward-preview" width="36" height="36" alt="" />
-            </div>
-            <code id="snippet-nav" class="embed-snippet"></code>
-          </div>
           <p class="muted shortcut-hint">↑↓ pan main · Alt+↑↓ end cap · Ctrl+↑↓ divider (Shift = 10%). ←→ cycle starred.</p>
 
           <div class="picker">
@@ -68,7 +53,6 @@
               <div class="preview-frame endcap-frame">
                 <img id="preview-divider" alt="Middle divider preview" />
               </div>
-              <code id="snippet-divider" class="embed-snippet"></code>
             </div>
 
             <div class="endcap-block">
@@ -92,7 +76,6 @@
               <div class="preview-frame endcap-frame">
                 <img id="preview-endcap" alt="End-cap preview" />
               </div>
-              <code id="snippet-endcap" class="embed-snippet"></code>
             </div>
 
             <div class="picker-head">
@@ -126,6 +109,33 @@
             </div>
             <span id="starred-empty" class="muted">None yet</span>
             <div id="starred-grid" class="thumb-grid" aria-label="Starred banners"></div>
+
+            <div class="snippets">
+              <div class="snippet-block">
+                <h3 class="snippet-label">README</h3>
+                <label class="profile-cb">
+                  Profile URL
+                  <input form="form" name="profileUrl" type="url" placeholder="https://github.com/you" />
+                </label>
+                <code id="snippet-banner" class="embed-snippet"></code>
+              </div>
+              <div class="snippet-block nav-snippet-block">
+                <h3 class="snippet-label">Nav buttons</h3>
+                <div class="nav-btn-preview" aria-hidden="true">
+                  <img id="nav-back-preview" width="36" height="36" alt="" />
+                  <img id="nav-forward-preview" width="36" height="36" alt="" />
+                </div>
+                <code id="snippet-nav" class="embed-snippet"></code>
+              </div>
+              <div class="snippet-block">
+                <h3 class="snippet-label">Middle divider</h3>
+                <code id="snippet-divider" class="embed-snippet"></code>
+              </div>
+              <div class="snippet-block">
+                <h3 class="snippet-label">End cap</h3>
+                <code id="snippet-endcap" class="embed-snippet"></code>
+              </div>
+            </div>
           </div>
         </section>
 
