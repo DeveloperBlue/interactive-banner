@@ -8,8 +8,14 @@ export function picsumIdFromUrl(url: string): number | null {
 }
 
 export function starredEntryUrl(entry: StarredEntry): string {
-  if (entry.id != null) return `https://picsum.photos/id/${entry.id}/1200/400`
+  if (entry.id != null && isPicsumUrl(entry.url)) {
+    return `https://picsum.photos/id/${entry.id}/1200/400`
+  }
   return entry.url
+}
+
+function isPicsumUrl(url: string): boolean {
+  return /picsum\.photos/i.test(url)
 }
 
 function bannersPath(url: string): string | null {

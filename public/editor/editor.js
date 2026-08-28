@@ -379,12 +379,26 @@ async function fetchStarred() {
   starredList = Array.isArray(data.entries) ? data.entries : []
 }
 
+function isPicsumUrl(url) {
+  return /picsum\.photos/i.test(String(url || ''))
+}
+
+function normalizeStarredEntry(entry) {
+  const url = String(entry?.url || '')
+  if (!isPicsumUrl(url)) {
+    return { id: null, url, author: entry?.author || '' }
+  }
+  const id = picsumId(entry?.id) ?? parsePicsumId(url)
+  return { id, url: url || bannerUrlForId(id), author: entry?.author || '' }
+}
+
 async function persistStarred(list) {
+  const entries = list.map(normalizeStarredEntry)
   const res = await fetch(`${API}/starred`, {
     method: 'PUT',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ entries: list }),
+    body: JSON.stringify({ entries }),
   })
   if (!res.ok) throw new Error('Failed to save starred')
   const data = await res.json().catch(() => ({}))
@@ -407,6 +421,12 @@ async function migrateLocalStarred() {
   }
 }
 
+function picsumId(value) {
+  if (value == null || value === '') return null
+  const n = Number(value)
+  return Number.isInteger(n) ? n : null
+}
+
 function bannerUrlForId(id) {
   return `https://picsum.photos/id/${id}/1200/400`
 }
@@ -417,11 +437,12 @@ function thumbUrlForId(id) {
 
 function parsePicsumId(url) {
   const m = String(url).match(/picsum\.photos\/(?:id\/)?(\d+)/i)
-  return m ? Number(m[1]) : null
+  return m ? picsumId(m[1]) : null
 }
 
 function entryKey(entry) {
-  if (entry.id != null) return `id:${entry.id}`
+  const id = picsumId(entry.id)
+  if (id != null) return `id:${id}`
   return `url:${entry.url}`
 }
 
@@ -516,7 +537,8 @@ function syncPicsumStarButtons() {
   for (const btn of document.querySelectorAll('.thumb-star')) {
     let entry
     if (btn.dataset.id) {
-      const id = Number(btn.dataset.id)
+      const id = picsumId(btn.dataset.id)
+      if (id == null) continue
       entry = { id, url: bannerUrlForId(id) }
     } else if (btn.dataset.url) {
       entry = entryFromUrl(btn.dataset.url)
@@ -548,13 +570,7 @@ async function toggleStar(entry) {
   const list = [...loadStarred()]
   const idx = findStarredIndex(list, entry)
   if (idx >= 0) list.splice(idx, 1)
-  else {
-    const normalized =
-      entry.id != null
-        ? { id: entry.id, url: bannerUrlForId(entry.id), author: entry.author || '' }
-        : { id: null, url: entry.url, author: entry.author || '' }
-    list.unshift(normalized)
-  }
+  else list.unshift(normalizeStarredEntry(entry))
   try {
     await persistStarred(list)
   } catch (err) {
@@ -567,12 +583,14 @@ async function toggleStar(entry) {
 }
 
 function resolveThumbSrc(entry) {
-  if (entry.id != null) return thumbUrlForId(entry.id)
+  const id = picsumId(entry.id)
+  if (id != null) return thumbUrlForId(id)
   return entry.url
 }
 
 function resolveBannerSrc(entry) {
-  if (entry.id != null) return bannerUrlForId(entry.id)
+  const id = picsumId(entry.id)
+  if (id != null) return bannerUrlForId(id)
   return entry.url
 }
 
@@ -749,7 +767,9 @@ async function loadPicsum() {
     const photos = await res.json()
     picsumGrid.replaceChildren()
     for (const photo of photos) {
-      picsumGrid.appendChild(makeThumb({ id: photo.id, author: photo.author }))
+      const id = picsumId(photo.id)
+      if (id == null) continue
+      picsumGrid.appendChild(makeThumb({ id, url: bannerUrlForId(id), author: photo.author }))
     }
     if (!photos.length) picsumGrid.textContent = 'No images'
   } catch (err) {

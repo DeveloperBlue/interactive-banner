@@ -25,8 +25,18 @@ export const textItemSchema = z.object({
   color: z.string().default('#ffffff'),
 })
 
+/** Picsum's list API returns `id` as a string; local banners use null. */
+const starredIdSchema = z
+  .any()
+  .transform((value) => {
+    if (value == null || value === '') return null
+    const n = typeof value === 'number' ? value : Number(value)
+    return Number.isFinite(n) ? n : value
+  })
+  .pipe(z.number().int().nullable())
+
 export const starredEntrySchema = z.object({
-  id: z.number().int().nullable(),
+  id: starredIdSchema,
   url: z.string().min(1),
   author: z.string().default(''),
 })

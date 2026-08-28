@@ -1,5 +1,6 @@
 services:
   banner:
+    image: ghcr.io/developerblue/interactive-banner:latest
     build: .
     ports:
       - "${PORT:-3000}:3000"
