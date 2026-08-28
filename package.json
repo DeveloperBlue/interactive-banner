@@ -1,0 +1,28 @@
+{
+  "name": "banner-generator",
+  "version": "1.0.0",
+  "description": "Dynamic README banner image generator",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "Michael Rooplall <contact@MichaelRooplall.com> (https://www.MichaelRooplall.com)",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.0",
+  "dependencies": {
+    "@fastify/multipart": "^10.1.1",
+    "@fastify/static": "^10.1.3",
+    "@napi-rs/canvas": "^1.0.8",
+    "fastify": "^5.12.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}

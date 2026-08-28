@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Banner Generator</title>
+    <link rel="stylesheet" href="/editor.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Banner Generator</h1>
+        <p class="muted">Edit config, preview PNG, save for README embeds.</p>
+        <div class="theme-toggle" role="group" aria-label="Preview theme">
+          <button type="button" id="theme-light" data-theme="light">Light</button>
+          <button type="button" id="theme-dark" data-theme="dark" class="active">Dark</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <section class="preview-panel">
+          <h2>Preview</h2>
+          <div class="preview-frame">
+            <img id="preview" alt="Banner preview" />
+          </div>
+          <p class="muted shortcut-hint">↑↓ pan main · Alt+↑↓ end cap · Ctrl+↑↓ divider (Shift = 10%). ←→ cycle starred.</p>
+          <p class="snippet">
+            README:
+            <label class="profile-cb">
+              Profile URL
+              <input form="form" name="profileUrl" type="url" placeholder="https://github.com/you" />
+            </label>
+            <span class="nav-btn-preview" aria-hidden="true">
+              <img id="nav-back-preview" width="36" height="36" alt="" />
+              <img id="nav-forward-preview" width="36" height="36" alt="" />
+            </span>
+            <code id="snippet"></code>
+          </p>
+
+          <div class="picker">
+            <div class="current-banner">
+              <div class="picker-head">
+                <h3>Current banner URL</h3>
+                <div class="current-banner-actions">
+                  <button type="button" id="star-current" title="Star / cache this URL">☆ Star</button>
+                  <button type="button" id="copy-banner-url" title="Copy URL">Copy</button>
+                </div>
+              </div>
+              <code id="current-banner-url" class="current-banner-url"></code>
+            </div>
+
+            <div class="endcap-block">
+              <div class="picker-head">
+                <h3>Middle divider</h3>
+                <div class="endcap-controls">
+                  <label class="endcap-height-label">
+                    Height
+                    <input form="form" name="dividerHeight" type="number" min="0" max="4000" value="40" title="Divider canvas height (px)" />
+                  </label>
+                  <label class="endcap-height-label">
+                    Image Y %
+                    <input form="form" name="dividerFocusY" type="number" min="0" max="100" step="1" title="Divider cover crop (independent). Ctrl+↑↓ when not typing." />
+                  </label>
+                </div>
+              </div>
+              <div class="preview-frame endcap-frame">
+                <img id="preview-divider" alt="Middle divider preview" />
+              </div>
+            </div>
+
+            <div class="endcap-block">
+              <div class="picker-head">
+                <h3>End cap</h3>
+                <div class="endcap-controls">
+                  <label class="endcap-height-label">
+                    Height
+                    <input form="form" name="endCapHeight" type="number" min="0" max="4000" value="40" title="End-cap canvas height (px)" />
+                  </label>
+                  <label class="endcap-height-label">
+                    Image Y %
+                    <input form="form" name="endCapFocusY" type="number" min="0" max="100" step="1" title="End-cap cover crop (independent). Alt+↑↓ when not typing." />
+                  </label>
+                  <label class="endcap-check-label">
+                    <input form="form" name="endCapFlipVertical" type="checkbox" checked />
+                    Flip vertical
+                  </label>
+                </div>
+              </div>
+              <div class="preview-frame endcap-frame">
+                <img id="preview-endcap" alt="End-cap preview" />
+              </div>
+            </div>
+
+            <div class="picker-head">
+              <h3>Local banners</h3>
+              <div class="current-banner-actions">
+                <label class="upload-btn">
+                  Upload
+                  <input id="local-upload" type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" multiple hidden />
+                </label>
+                <button type="button" id="local-refresh" title="Rescan banners/ folder">Refresh</button>
+              </div>
+            </div>
+            <p class="muted local-hint">PNG or JPEG only. Upload or drop onto the grid below.</p>
+            <div id="local-drop" class="local-drop">
+              <div id="local-grid" class="thumb-grid" aria-label="Local banners"></div>
+            </div>
+
+            <div class="picker-head">
+              <h3>Picsum banners</h3>
+              <button type="button" id="picsum-refresh">Refresh</button>
+            </div>
+            <div id="picsum-grid" class="thumb-grid" aria-label="Picsum suggestions"></div>
+
+            <div class="picker-head">
+              <h3>Starred</h3>
+              <div class="starred-nav">
+                <button type="button" id="starred-prev" title="Previous starred (←)">←</button>
+                <span id="starred-index" class="muted"></span>
+                <button type="button" id="starred-next" title="Next starred (→)">→</button>
+              </div>
+            </div>
+            <span id="starred-empty" class="muted">None yet</span>
+            <div id="starred-grid" class="thumb-grid" aria-label="Starred banners"></div>
+          </div>
+        </section>
+
+        <section class="form-panel">
+          <form id="form">
+            <details class="fold" open>
+              <summary>Canvas</summary>
+              <div class="fold-body">
+                <label>Width <input name="width" type="number" min="1" max="4000" /></label>
+                <label>Height <input name="height" type="number" min="1" max="4000" /></label>
+                <label>Radius <input name="canvasRadius" type="number" min="0" step="1" /></label>
+              </div>
+            </details>
+
+            <details class="fold" open>
+              <summary>Banner</summary>
+              <div class="fold-body">
+                <label class="full">URL <input name="bannerUrl" type="url" placeholder="https://…" /></label>
+                <label>Height (px) <input name="bannerHeight" type="number" min="0" /></label>
+                <div class="focus-row full">
+                  <label>Image Y % <input name="bannerFocusY" type="number" min="0" max="100" step="1" title="Main canvas cover crop: 0 = top, 50 = center, 100 = bottom. ↑↓ when not typing." /></label>
+                  <button type="button" id="reset-focus" title="Reset main + end-cap image Y to center (50%) for this banner">Reset shifts</button>
+                </div>
+                <label>Gap <input name="bannerGap" type="number" min="0" step="1" title="Inset from canvas top/left/right" /></label>
+                <label>Radius <input name="bannerRadius" type="number" min="0" step="1" /></label>
+                <label>Blur <input name="blur" type="number" min="0" step="0.5" /></label>
+                <label>
+                  Bottom edge
+                  <select name="bottomEdgeStyle">
+                    <option value="shatter">shatter</option>
+                    <option value="feather">feather</option>
+                  </select>
+                </label>
+                <label>Feather / shatter depth <input name="featherBottom" type="number" min="0" /></label>
+                <label>Shatter pieces <input name="shatterPieces" type="number" min="3" max="96" /></label>
+                <label>Shatter seed <input name="shatterSeed" type="number" step="1" /></label>
+                <label>Feather top <input name="featherTop" type="number" min="0" /></label>
+                <label>Feather right <input name="featherRight" type="number" min="0" /></label>
+                <label>Feather left <input name="featherLeft" type="number" min="0" /></label>
+              </div>
+            </details>
+
+            <details class="fold" open>
+              <summary>Avatar</summary>
+              <div class="fold-body">
+                <label class="full">URL <input name="avatarUrl" type="url" placeholder="https://…" /></label>
+                <label>
+                  Position
+                  <select name="avatarPosition">
+                    <option value="left">left</option>
+                    <option value="center">center</option>
+                    <option value="right">right</option>
+                  </select>
+                </label>
+                <label>Padding <input name="avatarPadding" type="number" min="0" /></label>
+                <label>Y <input name="avatarY" type="number" title="Vertical center of avatar (px from top)" /></label>
+                <label>Diameter <input name="avatarDiameter" type="number" min="1" /></label>
+                <label>Outline <input name="avatarOutline" type="number" min="0" step="0.5" /></label>
+                <label>Outline color <input name="avatarOutlineColor" type="text" placeholder="#d1d9e0" /></label>
+                <label>Backdrop blur <input name="avatarBackdropBlur" type="number" min="0" step="1" title="Blurred banner-color disc behind avatar; 0 = off" /></label>
+              </div>
+            </details>
+
+            <details class="fold" open>
+              <summary>Text</summary>
+              <div class="fold-body fold-body-stack">
+                <div id="texts"></div>
+                <button type="button" id="add-text">Add text</button>
+              </div>
+            </details>
+
+            <div class="actions">
+              <button type="submit">Save</button>
+              <button type="button" id="refresh">Refresh preview</button>
+              <span id="status" class="muted"></span>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+    <script src="/editor.js" type="module"></script>
+  </body>
+</html>

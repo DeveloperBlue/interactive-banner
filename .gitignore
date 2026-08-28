@@ -1,0 +1,11 @@
+node_modules/
+dist/
+cache/
+data/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+!data/.gitkeep
+!cache/fonts/.gitkeep
