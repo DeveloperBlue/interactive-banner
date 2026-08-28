@@ -2,6 +2,8 @@
 
 Small private project for creating interactive, cyclable banner images for GitHub Profile READMEs.
 
+Currently a proof-of-concept. Documentation is scarce, and control surfaces are rudimentary.
+
 Intended to be hosted behind Cloudflare Access to prevent access to the editor.
 
 ## Docker Compose
@@ -39,3 +41,10 @@ In the Cloudflare dashboard for your zone:
 After creating the rule, purge any already-cached images under **Caching → Configuration → Purge Cache → Custom Purge** (e.g. `https://banner.<yourdomain>.com/banner-dark.png`).
 
 To verify, request a generated URL directly and check response headers: `cf-cache-status` should be `BYPASS` or `DYNAMIC`, not `HIT`.
+
+---
+
+# TODO
+- [] Accept image masks
+- [] Make preview column wider to better show github profile's size, maybe resizable column with matching min and max
+- [] Better control surfaces overall
