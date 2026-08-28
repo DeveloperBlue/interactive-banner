@@ -169,7 +169,7 @@ Alpine multi-stage image. `pnpm install` runs **inside** the Linux build so **mu
 
 - Install **fontconfig** (+ bundled/cached fonts). Do not rely on Alpine having useful default faces.
 - Persist `data/` (config + starred) and optionally `banners/` via compose bind mounts; font downloads use a named volume.
-- Protect the editor and mutate routes with HTTP Basic Auth (`DASHBOARD_PASSWORD` required in production). Leave image + `/set-banner` public.
+- Protect `/editor` with Cloudflare Access (tunnel to localhost; do not expose the app port on the public IP). Leave image + `/set-banner` public.
 
 True scratch/distroless-without-libc is a poor fit for native `.node` addons.
 
@@ -213,7 +213,7 @@ cache/fonts/        # runtime Google cache (gitignored)
 4. **Cycle API** — store + `/set-banner` + safe `callback` redirect; document README snippet.
 5. **Config client** — static `public/` HTML form + preview; `GET`/`PUT /config`.
 6. **Hardening** — timeouts on remote image fetches, size limits, allowlisted hosts if needed, sensible cache headers.
-7. **Docker** — Alpine multi-stage, volume mounts for `data/` + `banners/`, Basic Auth on the editor.
+7. **Docker** — Alpine multi-stage, volume mounts for `data/` + `banners/`, localhost-only port bind, Cloudflare Access on `/editor`.
 
 ---
 
