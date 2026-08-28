@@ -3,9 +3,7 @@ import {
   getBannerRect,
   getDividerBannerRect,
   getEndCapBannerRect,
-  THEME_CARD_COLOR,
   type BannerConfig,
-  type Theme,
 } from '../schemas.js'
 import { ensureFontsForConfig } from '../fonts/registry.js'
 import {
@@ -19,10 +17,7 @@ import { loadRemoteImage } from './load-remote.js'
 import { clipToRoundedRect } from './clip.js'
 import { contrastTextColorFromCanvas } from './contrast.js'
 
-export async function renderBannerPng(
-  config: BannerConfig,
-  theme: Theme = 'dark',
-): Promise<Buffer> {
+export async function renderBannerPng(config: BannerConfig): Promise<Buffer> {
   await ensureFontsForConfig(
     config.texts.map((t) => ({ family: t.fontFamily, weight: t.fontWeight })),
   )
@@ -34,9 +29,6 @@ export async function renderBannerPng(
 
   const canvas = createCanvas(config.width, config.height)
   const ctx = canvas.getContext('2d')
-
-  ctx.fillStyle = THEME_CARD_COLOR[theme]
-  ctx.fillRect(0, 0, config.width, config.height)
 
   const bannerLayer = renderBannerLayer(config, bannerImage)
   const bannerRect = getBannerRect(config)
@@ -56,10 +48,7 @@ export async function renderBannerPng(
 }
 
 /** Visual end-cap strip: flipped banner, top shatter, bottom corners match main canvas top. */
-export async function renderEndCapPng(
-  config: BannerConfig,
-  theme: Theme = 'dark',
-): Promise<Buffer> {
+export async function renderEndCapPng(config: BannerConfig): Promise<Buffer> {
   const h = config.endCapHeight
   const canvas = createCanvas(config.width, Math.max(1, h))
   const ctx = canvas.getContext('2d')
@@ -69,9 +58,6 @@ export async function renderEndCapPng(
   }
 
   const bannerImage = await loadRemoteImage(config.bannerUrl)
-
-  ctx.fillStyle = THEME_CARD_COLOR[theme]
-  ctx.fillRect(0, 0, config.width, h)
 
   const layer = renderEndCapBannerLayer(config, bannerImage)
   const rect = getEndCapBannerRect(config)
@@ -90,10 +76,7 @@ export async function renderEndCapPng(
 }
 
 /** Middle divider strip: shatter on top and bottom. */
-export async function renderDividerPng(
-  config: BannerConfig,
-  theme: Theme = 'dark',
-): Promise<Buffer> {
+export async function renderDividerPng(config: BannerConfig): Promise<Buffer> {
   const h = config.dividerHeight
   const canvas = createCanvas(config.width, Math.max(1, h))
   const ctx = canvas.getContext('2d')
@@ -103,9 +86,6 @@ export async function renderDividerPng(
   }
 
   const bannerImage = await loadRemoteImage(config.bannerUrl)
-
-  ctx.fillStyle = THEME_CARD_COLOR[theme]
-  ctx.fillRect(0, 0, config.width, h)
 
   const layer = renderDividerBannerLayer(config, bannerImage)
   const rect = getDividerBannerRect(config)

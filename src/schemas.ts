@@ -8,12 +8,6 @@ export const bottomEdgeStyleSchema = z.enum(['feather', 'shatter'])
 export type Theme = z.infer<typeof themeSchema>
 export type BottomEdgeStyle = z.infer<typeof bottomEdgeStyleSchema>
 
-/** Card / canvas fill behind banner + gap */
-export const THEME_CARD_COLOR: Record<Theme, string> = {
-  light: '#ffffff',
-  dark: '#0d1117',
-}
-
 export const textItemSchema = z.object({
   content: z.string(),
   align: textAlignSchema.default('left'),

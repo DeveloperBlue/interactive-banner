@@ -34,8 +34,8 @@ function samplePixel(
 }
 
 /**
- * Sample the composed canvas (card + banner) near text anchors and across the
- * banner band, then pick dark vs light text for contrast.
+ * Sample the composed canvas near text anchors and across the banner band,
+ * then pick dark vs light text for contrast.
  */
 export function contrastTextColorFromCanvas(
   ctx: SKRSContext2D,
@@ -74,7 +74,7 @@ export function contrastTextColorFromCanvas(
     }
   }
 
-  // Fallback: theme card center / corners already composited
+  // Fallback: remaining opaque pixels (banner / avatar), skipping transparency
   if (!samples.length) {
     for (const [x, y] of [
       [w / 2, h / 2],
