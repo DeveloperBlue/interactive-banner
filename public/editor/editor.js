@@ -605,7 +605,9 @@ function makeThumb(entry, { starredSection = false, localSection = false, index 
   const imgBtn = document.createElement('button')
   imgBtn.type = 'button'
   imgBtn.className = 'thumb-pick'
-  imgBtn.innerHTML = `<img src="${resolveThumbSrc(entry)}" alt="${escapeHtml(label)}" loading="lazy" />`
+  const thumbSrc = resolveThumbSrc(entry)
+  const thumbSize = picsumId(entry.id) != null ? ' width="480" height="160"' : ''
+  imgBtn.innerHTML = `<img src="${escapeHtml(thumbSrc)}" alt="${escapeHtml(label)}" loading="lazy"${thumbSize} />`
   imgBtn.addEventListener('click', () => {
     if (starredSection && index >= 0) starredCursor = index
     applyBannerUrl(resolveBannerSrc(entry))
@@ -759,19 +761,34 @@ async function uploadLocalFiles(fileList) {
   setStatus(files.length > 1 ? `Uploaded ${files.length} images` : `Uploaded ${last?.name || 'image'}`)
 }
 
+function renderPicsumSkeletons(count = PICSUM_COUNT) {
+  const frag = document.createDocumentFragment()
+  for (let i = 0; i < count; i++) {
+    const card = document.createElement('div')
+    card.className = 'thumb-card thumb-skeleton'
+    card.setAttribute('aria-hidden', 'true')
+    frag.appendChild(card)
+  }
+  picsumGrid.replaceChildren(frag)
+}
+
 async function loadPicsum() {
-  picsumGrid.textContent = 'Loading…'
+  renderPicsumSkeletons()
   try {
     const res = await fetch(`https://picsum.photos/v2/list?page=${picsumPage}&limit=${PICSUM_COUNT}`)
     if (!res.ok) throw new Error(`Picsum ${res.status}`)
     const photos = await res.json()
-    picsumGrid.replaceChildren()
+    if (!photos.length) {
+      picsumGrid.textContent = 'No images'
+      return
+    }
+    const frag = document.createDocumentFragment()
     for (const photo of photos) {
       const id = picsumId(photo.id)
       if (id == null) continue
-      picsumGrid.appendChild(makeThumb({ id, url: bannerUrlForId(id), author: photo.author }))
+      frag.appendChild(makeThumb({ id, url: bannerUrlForId(id), author: photo.author }))
     }
-    if (!photos.length) picsumGrid.textContent = 'No images'
+    picsumGrid.replaceChildren(frag)
   } catch (err) {
     picsumGrid.textContent = err.message || 'Failed to load Picsum'
   }

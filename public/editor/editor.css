@@ -491,6 +491,12 @@ button[type="submit"] {
   min-height: 64px;
   min-width: 0;
   max-width: 100%;
+  contain: layout style paint;
+}
+
+.thumb-card.thumb-skeleton {
+  border-color: color-mix(in srgb, var(--border) 65%, transparent);
+  background: color-mix(in srgb, var(--border) 22%, var(--bg));
 }
 
 .thumb-card:hover,
