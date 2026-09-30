@@ -1,5 +1,5 @@
 import path from 'node:path'
-import Fastify from 'fastify'
+import Fastify, { LogController } from 'fastify'
 import fastifyStatic from '@fastify/static'
 import { registerBundledFonts } from './fonts/registry.js'
 import { loadConfig } from './state/config-store.js'
@@ -19,7 +19,13 @@ async function main() {
   await loadConfig()
   await loadStarred()
 
-  const app = Fastify({ logger: true, trustProxy: true })
+  const app = Fastify({
+    logger: true,
+    trustProxy: true,
+    logController: new LogController({
+      disableRequestLogging: (request) => request.url.split('?')[0] === '/health',
+    }),
+  })
 
   app.get('/health', async () => ({ ok: true }))
   app.get('/', async (_req, reply) => reply.redirect('/editor/'))
