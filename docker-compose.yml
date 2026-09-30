@@ -8,6 +8,8 @@ services:
       NODE_ENV: production
       PORT: 3000
       HOST: 0.0.0.0
+      UMAMI_HOST_URL: ${UMAMI_HOST_URL:-}
+      UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID:-}
     volumes:
       - ./data:/app/data
       - ./banners:/app/banners

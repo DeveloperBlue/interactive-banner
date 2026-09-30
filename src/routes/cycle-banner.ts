@@ -4,6 +4,7 @@ import { themeSchema, type Theme } from '../schemas.js'
 import { isAllowedCallback } from '../callback.js'
 import { renderNavButtonPng, type NavDirection } from '../compose/nav-button.js'
 import { cycleStarredBanner } from '../state/cycle-banner.js'
+import { trackUmamiEvent } from '../analytics/umami.js'
 
 const cycleQuery = z.object({
   callback: z.string().url(),
@@ -33,6 +34,15 @@ async function cycleAndRedirect(delta: 1 | -1, req: FastifyRequest, reply: Fasti
     return reply.status(400).send({ error: 'callback host not allowed' })
   }
   await cycleStarredBanner(delta)
+  const direction = delta === 1 ? 'next' : 'prev'
+  trackUmamiEvent(req, {
+    name: `nav-${direction}`,
+    url: `/${direction}-banner`,
+    data: {
+      direction,
+      callbackHost: new URL(callback).hostname,
+    },
+  })
   return reply.redirect(callback, 302)
 }
 

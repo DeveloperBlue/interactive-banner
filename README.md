@@ -42,6 +42,24 @@ After creating the rule, purge any already-cached images under **Caching → Con
 
 To verify, request a generated URL directly and check response headers: `cf-cache-status` should be `BYPASS` or `DYNAMIC`, not `HIT`.
 
+## Umami
+
+Nav buttons in GitHub READMEs are plain links (`/prev-banner`, `/next-banner`), so they never run JavaScript. Clicks are recorded server-side via Umami's `/api/send` API. The editor is not tracked.
+
+1. In Umami, add a website for your banner hostname (e.g. `banner.<yourdomain>.com`) and copy the website ID.
+2. Set in `.env` (and thus Compose):
+
+   ```
+   UMAMI_HOST_URL=https://umami.example.com
+   UMAMI_WEBSITE_ID=<uuid>
+   ```
+
+   Cloud Umami: `UMAMI_HOST_URL=https://cloud.umami.is`.
+
+3. Restart the container. The banner host must be able to reach `UMAMI_HOST_URL` over HTTPS. Keep Cloudflare Access on `/editor` only — public nav routes must stay open.
+
+**Events:** `nav-prev` / `nav-next` (README button clicks). Event properties include `direction` and `callbackHost`. `/banner.png` loads are not tracked: GitHub Camo, editor preview refreshes, and crawlers would dominate the numbers.
+
 ---
 
 # TODO
@@ -49,3 +67,4 @@ To verify, request a generated URL directly and check response headers: `cf-cach
 - [] Make preview column wider to better show github profile's size, maybe resizable column with matching min and max
 - [] Better control surfaces overall
 - [] Missing controls for padding for avatar and blur circle
+
