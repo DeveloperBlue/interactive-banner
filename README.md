@@ -44,7 +44,7 @@ To verify, request a generated URL directly and check response headers: `cf-cach
 
 ## Umami
 
-Nav buttons in GitHub READMEs are plain links (`/prev-banner`, `/next-banner`), so they never run JavaScript. Clicks are recorded server-side via Umami's `/api/send` API. The editor is not tracked.
+Nav buttons in GitHub READMEs are plain links (`/prev-banner`, `/next-banner`), so they never run JavaScript. Clicks are recorded server-side via Umami's `/api/batch` API (a pageview for the dashboard plus a named event). The editor is not tracked. Metrics count interactors, not profile viewers.
 
 1. In Umami, add a website for your banner hostname (e.g. `banner.<yourdomain>.com`) and copy the website ID.
 2. Set in `.env` (and thus Compose):
@@ -58,7 +58,9 @@ Nav buttons in GitHub READMEs are plain links (`/prev-banner`, `/next-banner`), 
 
 3. Restart the container. The banner host must be able to reach `UMAMI_HOST_URL` over HTTPS. Keep Cloudflare Access on `/editor` only — public nav routes must stay open.
 
-**Events:** `nav-prev` / `nav-next` (README button clicks). Event properties include `direction` and `callbackHost`. `/banner.png` loads are not tracked: GitHub Camo, editor preview refreshes, and crawlers would dominate the numbers.
+**Dashboard:** each nav click is a pageview on `/prev-banner` or `/next-banner` (Views / Visitors).
+**Events:** `nav-prev` / `nav-next` with properties `direction` and `callbackHost`.
+`/banner.png` loads are not tracked: GitHub Camo, editor preview refreshes, and crawlers would dominate the numbers.
 
 ---
 
